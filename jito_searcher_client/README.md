@@ -44,11 +44,11 @@ KEYPAIR_PATH = "/path/to/authenticated/keypair.json"
 BLOCK_ENGINE_URL = "frankfurt.mainnet.block-engine.jito.wtf"
 
 async def main():
-	with open(KEYPAIR_PATH) as kp_path:
-		kp = Keypair.from_json(kp_path.read())
-	client = await get_async_searcher_client(BLOCK_ENGINE_URL, kp)
-	leaders = await client.GetConnectedLeaders(ConnectedLeadersRequest())
-	print(f"{leaders=}")
+    with open(KEYPAIR_PATH) as kp_path:
+        kp = Keypair.from_json(kp_path.read())
+    client = await get_async_searcher_client(BLOCK_ENGINE_URL, kp)
+    leaders = await client.GetConnectedLeaders(ConnectedLeadersRequest())
+    print(f"{leaders=}")
 
 asyncio.run(main())
 ```
