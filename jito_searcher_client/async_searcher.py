@@ -1,15 +1,36 @@
 import time
-from typing import Optional, List, Tuple
+from typing import Callable, List, Optional, Tuple, Union
 
 from grpc import ssl_channel_credentials
-from grpc._interceptor import intercept_channel
-from grpc.aio import UnaryUnaryClientInterceptor, UnaryStreamClientInterceptor, StreamUnaryClientInterceptor, \
-    StreamStreamClientInterceptor, ClientCallDetails, secure_channel
-from jito_searcher_client import JwtToken
+from grpc.aio import (
+    ClientCallDetails,
+    StreamStreamCall,
+    StreamStreamClientInterceptor,
+    StreamUnaryCall,
+    StreamUnaryClientInterceptor,
+    UnaryStreamCall,
+    UnaryStreamClientInterceptor,
+    UnaryUnaryCall,
+    UnaryUnaryClientInterceptor,
+    secure_channel,
+)
+from grpc.aio._typing import (
+    RequestIterableType,
+    RequestType,
+    ResponseIterableType,
+    ResponseType,
+)
 from solders.keypair import Keypair
 
-from jito_searcher_client.generated.auth_pb2 import RefreshAccessTokenResponse, RefreshAccessTokenRequest, \
-    GenerateAuthChallengeRequest, Role, GenerateAuthTokensResponse, GenerateAuthTokensRequest
+from jito_searcher_client import JwtToken
+from jito_searcher_client.generated.auth_pb2 import (
+    GenerateAuthChallengeRequest,
+    GenerateAuthTokensRequest,
+    GenerateAuthTokensResponse,
+    RefreshAccessTokenRequest,
+    RefreshAccessTokenResponse,
+    Role,
+)
 from jito_searcher_client.generated.auth_pb2_grpc import AuthServiceStub
 from jito_searcher_client.generated.searcher_pb2_grpc import SearcherServiceStub
 
@@ -43,7 +64,12 @@ class AsyncSearcherInterceptor(
         self._access_token: Optional[JwtToken] = None
         self._refresh_token: Optional[JwtToken] = None
 
-    async def intercept_unary_stream(self, continuation, client_call_details, request):
+    async def intercept_unary_stream(
+        self,
+        continuation: Callable[[ClientCallDetails, RequestType], UnaryStreamCall],
+        client_call_details: ClientCallDetails,
+        request: RequestType,
+    ) -> Union[ResponseIterableType, UnaryStreamCall]:
         await self.authenticate_if_needed()
 
         client_call_details = self._insert_headers(
@@ -51,13 +77,14 @@ class AsyncSearcherInterceptor(
             client_call_details,
         )
 
-        undone_call = await continuation(client_call_details, request)
-        response = await undone_call
-        return response
+        return await continuation(client_call_details, request_iterator)
 
     async def intercept_stream_unary(
-            self, continuation, client_call_details, request_iterator
-    ):
+        self,
+        continuation: Callable[[ClientCallDetails, RequestType], StreamUnaryCall],
+        client_call_details: ClientCallDetails,
+        request_iterator: RequestIterableType,
+    ) -> StreamUnaryCall:
         await self.authenticate_if_needed()
 
         client_call_details = self._insert_headers(
@@ -65,13 +92,14 @@ class AsyncSearcherInterceptor(
             client_call_details,
         )
 
-        undone_call = await continuation(client_call_details, request)
-        response = await undone_call
-        return response
+        return await continuation(client_call_details, request_iterator)
 
     async def intercept_stream_stream(
-            self, continuation, client_call_details, request_iterator
-    ):
+        self,
+        continuation: Callable[[ClientCallDetails, RequestType], StreamStreamCall],
+        client_call_details: ClientCallDetails,
+        request_iterator: RequestIterableType,
+    ) -> Union[ResponseIterableType, StreamStreamCall]:
         await self.authenticate_if_needed()
 
         client_call_details = self._insert_headers(
@@ -79,11 +107,14 @@ class AsyncSearcherInterceptor(
             client_call_details,
         )
 
-        undone_call = await continuation(client_call_details, request)
-        response = await undone_call
-        return response
+        return await continuation(client_call_details, request_iterator)
 
-    async def intercept_unary_unary(self, continuation, client_call_details, request):
+    async def intercept_unary_unary(
+        self,
+        continuation: Callable[[ClientCallDetails, RequestType], UnaryUnaryCall],
+        client_call_details: ClientCallDetails,
+        request: RequestType,
+    ) -> Union[UnaryUnaryCall, ResponseType]:
         await self.authenticate_if_needed()
 
         client_call_details = self._insert_headers(
@@ -96,9 +127,7 @@ class AsyncSearcherInterceptor(
         return response
 
     @staticmethod
-    def _insert_headers(
-            new_metadata: List[Tuple[str, str]], client_call_details
-    ) -> ClientCallDetails:
+    def _insert_headers(new_metadata: List[Tuple[str, str]], client_call_details) -> ClientCallDetails:
         metadata = []
         if client_call_details.metadata is not None:
             metadata = list(client_call_details.metadata)
@@ -132,9 +161,11 @@ class AsyncSearcherInterceptor(
         auth_client = AuthServiceStub(channel)
 
         new_access_token: RefreshAccessTokenResponse = await auth_client.RefreshAccessToken(
-            RefreshAccessTokenRequest(refresh_token=self._refresh_token.token))
-        self._access_token = JwtToken(token=new_access_token.access_token.value,
-                                      expiration=new_access_token.access_token.expires_at_utc.seconds)
+            RefreshAccessTokenRequest(refresh_token=self._refresh_token.token)
+        )
+        self._access_token = JwtToken(
+            token=new_access_token.access_token.value, expiration=new_access_token.access_token.expires_at_utc.seconds
+        )
 
     async def full_authentication(self):
         """
@@ -144,23 +175,21 @@ class AsyncSearcherInterceptor(
         channel = secure_channel(self._url, credentials)
         auth_client = AuthServiceStub(channel)
 
-        challenge = (await auth_client.GenerateAuthChallenge(
-            GenerateAuthChallengeRequest(
-                role=Role.SEARCHER, pubkey=bytes(self._kp.pubkey())
+        challenge = (
+            await auth_client.GenerateAuthChallenge(
+                GenerateAuthChallengeRequest(role=Role.SEARCHER, pubkey=bytes(self._kp.pubkey()))
             )
-        )).challenge
+        ).challenge
 
         challenge_to_sign = f"{str(self._kp.pubkey())}-{challenge}"
 
         signed = self._kp.sign_message(bytes(challenge_to_sign, "utf8"))
 
-        auth_tokens_response: GenerateAuthTokensResponse = (
-            await auth_client.GenerateAuthTokens(
-                GenerateAuthTokensRequest(
-                    challenge=challenge_to_sign,
-                    client_pubkey=bytes(self._kp.pubkey()),
-                    signed_challenge=bytes(signed),
-                )
+        auth_tokens_response: GenerateAuthTokensResponse = await auth_client.GenerateAuthTokens(
+            GenerateAuthTokensRequest(
+                challenge=challenge_to_sign,
+                client_pubkey=bytes(self._kp.pubkey()),
+                signed_challenge=bytes(signed),
             )
         )
 
