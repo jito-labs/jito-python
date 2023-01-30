@@ -33,6 +33,8 @@ print(f"{leaders=}")
 ## Async Client
 
 ```python
+import asyncio
+
 from jito_searcher_client import get_async_searcher_client
 from jito_searcher_client.generated.searcher_pb2 import ConnectedLeadersRequest
 
@@ -41,12 +43,14 @@ from solders.keypair import Keypair
 KEYPAIR_PATH = "/path/to/authenticated/keypair.json"
 BLOCK_ENGINE_URL = "frankfurt.mainnet.block-engine.jito.wtf"
 
-with open(KEYPAIR_PATH) as kp_path:
-    kp = Keypair.from_json(kp_path.read())
+async def main():
+	with open(KEYPAIR_PATH) as kp_path:
+		kp = Keypair.from_json(kp_path.read())
+	client = await get_async_searcher_client(BLOCK_ENGINE_URL, kp)
+	leaders = await client.GetConnectedLeaders(ConnectedLeadersRequest())
+	print(f"{leaders=}")
 
-client = get_async_searcher_client(BLOCK_ENGINE_URL, kp)
-leaders = client.GetConnectedLeaders(ConnectedLeadersRequest())
-print(f"{leaders=}")
+asyncio.run(main())
 ```
 
 # Development
