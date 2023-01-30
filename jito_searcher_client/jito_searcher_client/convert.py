@@ -1,6 +1,6 @@
 from solders.transaction import Transaction
 
-from .generated.packet_pb2 import Meta, Packet
+from jito_searcher_client.generated.packet_pb2 import Meta, Packet
 
 
 def tx_to_protobuf_packet(tx: Transaction) -> Packet:

@@ -13,7 +13,7 @@ Please request access to the block engine by creating a solana keypair and email
 
 ```python
 from jito_searcher_client import get_searcher_client
-from jito_searcher_client.generated.searcher_pb2 import ConnectedLeadersRequest
+from jito_searcher_client import ConnectedLeadersRequest
 
 from solders.keypair import Keypair
 

@@ -14,7 +14,7 @@ from grpc import (
 from grpc.aio import ClientCallDetails
 from solders.keypair import Keypair
 
-from .generated.auth_pb2 import (
+from jito_searcher_client.generated.auth_pb2 import (
     GenerateAuthChallengeRequest,
     GenerateAuthTokensRequest,
     GenerateAuthTokensResponse,
