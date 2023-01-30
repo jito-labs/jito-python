@@ -2,8 +2,6 @@ import time
 from typing import List, Optional, Tuple
 
 from grpc import (
-    StreamStreamClientInterceptor,
-    StreamUnaryClientInterceptor,
     UnaryStreamClientInterceptor,
     UnaryUnaryClientInterceptor,
     intercept_channel,
@@ -27,8 +25,6 @@ from token import JwtToken
 class SearcherInterceptor(
     UnaryUnaryClientInterceptor,
     UnaryStreamClientInterceptor,
-    StreamUnaryClientInterceptor,
-    StreamStreamClientInterceptor,
 ):
     """
     SearcherInterceptor is responsible for authenticating with the block engine.
@@ -62,26 +58,6 @@ class SearcherInterceptor(
         )
 
         return continuation(client_call_details, request)
-
-    def intercept_stream_unary(self, continuation, client_call_details, request_iterator):
-        self.authenticate_if_needed()
-
-        client_call_details = self._insert_headers(
-            [("authorization", f"Bearer {self._access_token.token}")],
-            client_call_details,
-        )
-
-        return continuation(client_call_details, request_iterator)
-
-    def intercept_stream_stream(self, continuation, client_call_details, request_iterator):
-        self.authenticate_if_needed()
-
-        client_call_details = self._insert_headers(
-            [("authorization", f"Bearer {self._access_token.token}")],
-            client_call_details,
-        )
-
-        return continuation(client_call_details, request_iterator)
 
     def intercept_unary_unary(self, continuation, client_call_details, request):
         self.authenticate_if_needed()

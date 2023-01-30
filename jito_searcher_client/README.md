@@ -78,6 +78,12 @@ $ poetry run black .
 $ poetry run isort .
 ```
 
+Linting:
+```bash
+poetry run isort .
+poetry run black .
+```
+
 Publishing package
 ```bash
 $ poetry protoc && poetry build && poetry publish

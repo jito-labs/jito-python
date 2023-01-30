@@ -1,28 +1,16 @@
 import time
-from typing import Callable, List, Optional, Tuple, Union
+from typing import List, Optional, Tuple
 
 from grpc import ssl_channel_credentials
 from grpc.aio import (
     ClientCallDetails,
-    StreamStreamCall,
-    StreamStreamClientInterceptor,
-    StreamUnaryCall,
-    StreamUnaryClientInterceptor,
-    UnaryStreamCall,
     UnaryStreamClientInterceptor,
-    UnaryUnaryCall,
     UnaryUnaryClientInterceptor,
     secure_channel,
 )
-from grpc.aio._typing import (
-    RequestIterableType,
-    RequestType,
-    ResponseIterableType,
-    ResponseType,
-)
 from solders.keypair import Keypair
 
-from jito_searcher_client import JwtToken
+from jito_searcher_client.token import JwtToken
 from jito_searcher_client.generated.auth_pb2 import (
     GenerateAuthChallengeRequest,
     GenerateAuthTokensRequest,
@@ -38,8 +26,6 @@ from jito_searcher_client.generated.searcher_pb2_grpc import SearcherServiceStub
 class AsyncSearcherInterceptor(
     UnaryUnaryClientInterceptor,
     UnaryStreamClientInterceptor,
-    StreamUnaryClientInterceptor,
-    StreamStreamClientInterceptor,
 ):
     """
     AsyncSearcherInterceptor is responsible for authenticating with the block engine.
@@ -66,10 +52,10 @@ class AsyncSearcherInterceptor(
 
     async def intercept_unary_stream(
         self,
-        continuation: Callable[[ClientCallDetails, RequestType], UnaryStreamCall],
-        client_call_details: ClientCallDetails,
-        request: RequestType,
-    ) -> Union[ResponseIterableType, UnaryStreamCall]:
+        continuation,
+        client_call_details,
+        request,
+    ):
         await self.authenticate_if_needed()
 
         client_call_details = self._insert_headers(
@@ -77,44 +63,16 @@ class AsyncSearcherInterceptor(
             client_call_details,
         )
 
-        return await continuation(client_call_details, request_iterator)
+        call = await continuation(client_call_details, request)
 
-    async def intercept_stream_unary(
-        self,
-        continuation: Callable[[ClientCallDetails, RequestType], StreamUnaryCall],
-        client_call_details: ClientCallDetails,
-        request_iterator: RequestIterableType,
-    ) -> StreamUnaryCall:
-        await self.authenticate_if_needed()
-
-        client_call_details = self._insert_headers(
-            [("authorization", f"Bearer {self._access_token.token}")],
-            client_call_details,
-        )
-
-        return await continuation(client_call_details, request_iterator)
-
-    async def intercept_stream_stream(
-        self,
-        continuation: Callable[[ClientCallDetails, RequestType], StreamStreamCall],
-        client_call_details: ClientCallDetails,
-        request_iterator: RequestIterableType,
-    ) -> Union[ResponseIterableType, StreamStreamCall]:
-        await self.authenticate_if_needed()
-
-        client_call_details = self._insert_headers(
-            [("authorization", f"Bearer {self._access_token.token}")],
-            client_call_details,
-        )
-
-        return await continuation(client_call_details, request_iterator)
+        return call
 
     async def intercept_unary_unary(
         self,
-        continuation: Callable[[ClientCallDetails, RequestType], UnaryUnaryCall],
-        client_call_details: ClientCallDetails,
-        request: RequestType,
-    ) -> Union[UnaryUnaryCall, ResponseType]:
+        continuation,
+        client_call_details,
+        request,
+    ):
         await self.authenticate_if_needed()
 
         client_call_details = self._insert_headers(
