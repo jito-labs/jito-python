@@ -75,6 +75,24 @@ files = [
 construct = "2.10.68"
 
 [[package]]
+name = "grpc-interceptor"
+version = "0.15.0"
+description = "Simplifies gRPC interceptors"
+category = "main"
+optional = false
+python-versions = ">=3.6.1,<4.0.0"
+files = [
+    {file = "grpc-interceptor-0.15.0.tar.gz", hash = "sha256:5c1aa9680b1d7e12259960c38057b121826860b05ebbc1001c74343b7ad1455e"},
+    {file = "grpc_interceptor-0.15.0-py3-none-any.whl", hash = "sha256:63e390162e64df96c39c40508eb697def76a7cafac32a7eaf9272093eec1109e"},
+]
+
+[package.dependencies]
+grpcio = ">=1.32.0,<2.0.0"
+
+[package.extras]
+testing = ["protobuf (>=3.6.0)"]
+
+[[package]]
 name = "grpcio"
 version = "1.51.1"
 description = "HTTP/2-based RPC framework"
@@ -438,4 +456,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "cf0efd10d6f8ecf41b3487328112c5cf161e349530ef35796912176d20b471d3"
+content-hash = "2537bc00f1b2037eb5aee8857919e0e3d1aac4776924847ca931ba151d3e0655"

@@ -13,6 +13,7 @@ protobuf = "^4.21.12"
 solders = "^0.14.2"
 solana = "^0.29.0"
 isort = "^5.11.4"
+grpc-interceptor = "^0.15.0"
 
 [build-system]
 requires = ["poetry-core"]
