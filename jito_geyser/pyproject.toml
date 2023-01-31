@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "jito_geyser"
-version = "0.0.1"
+version = "0.1.0"
 description = "Jito Labs Geyser Client"
 authors = ["Jito Labs <support@jito.wtf>"]
 readme = "README.md"
