@@ -1,32 +1,60 @@
 # About
-This library contains tooling to interact with Jito Lab's Block Engine as a searcher.
+This library contains python code to interact with [Jito's Geyser Plugin](https://github.com/jito-foundation/geyser-grpc-plugin).
 
 # Downloading
 ```bash
-$ pip install jito_searcher_client
+$ pip install jito_geyser
 ```
 
-# Keypair Authentication
-Please request access to the block engine by creating a solana keypair and emailing the public key to support@jito.wtf.
+# Access Token
+Please request access to geyser by emailing support@jito.wtf
 
-# Simple Example
+# Examples
 
+### Printing slot updates
 ```python
-from jito_searcher_client import get_searcher_client
-from jito_searcher_client import ConnectedLeadersRequest
+from grpc import ssl_channel_credentials, secure_channel
 
-from solders.keypair import Keypair
+from jito_geyser.generated.geyser_pb2 import SubscribeSlotUpdateRequest
+from jito_geyser.generated.geyser_pb2_grpc import GeyserStub
 
-KEYPAIR_PATH = "/path/to/authenticated/keypair.json"
-BLOCK_ENGINE_URL = "frankfurt.mainnet.block-engine.jito.wtf"
+GEYSER_URL = "mainnet.rpc.jito.wtf"
+ACCESS_TOKEN = "ACCESS_TOKEN_HERE"
 
-with open(KEYPAIR_PATH) as kp_path:
-    kp = Keypair.from_json(kp_path.read())
-
-client = get_searcher_client(BLOCK_ENGINE_URL, kp)
-leaders = client.GetConnectedLeaders(ConnectedLeadersRequest())
-print(f"{leaders=}")
+channel = secure_channel(GEYSER_URL, ssl_channel_credentials())
+client = GeyserStub(channel)
+for msg in client.SubscribeSlotUpdates(SubscribeSlotUpdateRequest(), metadata=[("access-token", ACCESS_TOKEN)]):
+    print(msg)
 ```
+
+### Listening to program account updates
+This example listens to pyth-owned accounts
+```python
+from grpc import ssl_channel_credentials, secure_channel
+from solders.pubkey import Pubkey # note: probably need to install solders for this import
+
+from jito_geyser.generated.geyser_pb2 import SubscribeProgramsUpdatesRequest
+from jito_geyser.generated.geyser_pb2_grpc import GeyserStub
+
+GEYSER_URL = "mainnet.rpc.jito.wtf"
+ACCESS_TOKEN = "ACCESS_TOKEN_HERE"
+ACCOUNTS = [bytes(Pubkey.from_string("FsJ3A3u2vn5cTVofAjvy6y5kwABJAqYWpe4975bi2epH"))]
+
+channel = secure_channel(GEYSER_URL, ssl_channel_credentials())
+client = GeyserStub(channel)
+for msg in client.SubscribeProgramUpdates(SubscribeProgramsUpdatesRequest(programs=ACCOUNTS), metadata=[("access-token", ACCESS_TOKEN)]):
+    print(msg)
+```
+
+### Functions available
+- There are many functions available including:
+  - GetHeartbeatInterval
+  - SubscribeAccountUpdates
+  - SubscribeProgramUpdates
+  - SubscribePartialAccountUpdates
+  - SubscribeSlotUpdates
+  - SubscribeTransactionUpdates
+  - SubscribeBlockUpdates
 
 # Development
 
@@ -43,8 +71,14 @@ $ curl -sSL https://install.python-poetry.org | python3 -
 Setup environment and build protobufs
 ```bash
 $ poetry install
-$ poetry protoc
 $ poetry shell
+$ poetry protoc
+```
+
+Linting
+```bash
+$ poetry run black .
+$ poetry run isort .
 ```
 
 Publishing package
