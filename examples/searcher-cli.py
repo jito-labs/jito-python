@@ -36,9 +36,9 @@ from jito_searcher_client.searcher import get_searcher_client
     required=True,
 )
 def cli(
-        ctx,
-        keypair_path: str,
-        block_engine_url: str,
+    ctx,
+    keypair_path: str,
+    block_engine_url: str,
 ):
     """
     This script can be used to interface with the block engine as a jito_searcher_client.
@@ -55,16 +55,12 @@ def mempool_accounts(client: SearcherServiceStub, accounts: List[str]):
     """
     Stream pending transactions from write-locked accounts.
     """
-    leader: NextScheduledLeaderResponse = client.GetNextScheduledLeader(
-        NextScheduledLeaderRequest()
-    )
+    leader: NextScheduledLeaderResponse = client.GetNextScheduledLeader(NextScheduledLeaderRequest())
     print(
         f"next scheduled leader is {leader.next_leader_identity} in {leader.next_leader_slot - leader.current_slot} slots"
     )
 
-    for notification in client.SubscribePendingTransactions(
-            PendingTxSubscriptionRequest(accounts=accounts)
-    ):
+    for notification in client.SubscribePendingTransactions(PendingTxSubscriptionRequest(accounts=accounts)):
         for packet in notification.transactions:
             print(VersionedTransaction.from_bytes(packet.data))
 
@@ -138,13 +134,13 @@ def tip_accounts(client: SearcherServiceStub):
     required=True,
 )
 def send_bundle(
-        client: SearcherServiceStub,
-        rpc_url: str,
-        payer: str,
-        message: str,
-        num_txs: int,
-        lamports: int,
-        tip_account: str,
+    client: SearcherServiceStub,
+    rpc_url: str,
+    payer: str,
+    message: str,
+    num_txs: int,
+    lamports: int,
+    tip_account: str,
 ):
     """
     Send a bundle!
@@ -161,9 +157,7 @@ def send_bundle(
     print("waiting for jito leader...")
     while not is_leader_slot:
         time.sleep(0.5)
-        next_leader: NextScheduledLeaderResponse = client.GetNextScheduledLeader(
-            NextScheduledLeaderRequest()
-        )
+        next_leader: NextScheduledLeaderResponse = client.GetNextScheduledLeader(NextScheduledLeaderRequest())
         num_slots_to_leader = next_leader.next_leader_slot - next_leader.current_slot
         print(f"waiting {num_slots_to_leader} slots to jito leader")
         is_leader_slot = num_slots_to_leader <= 2
@@ -174,21 +168,23 @@ def send_bundle(
     # Build bundle
     txs: List[Transaction] = []
     for idx in range(num_txs):
-        ixs = [create_memo(MemoParams(program_id=Pubkey.from_string("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"),
-                                      signer=payer_kp.pubkey(),
-                                      message=bytes(f"jito bundle {idx}: {message}", "utf-8")))]
+        ixs = [
+            create_memo(
+                MemoParams(
+                    program_id=Pubkey.from_string("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"),
+                    signer=payer_kp.pubkey(),
+                    message=bytes(f"jito bundle {idx}: {message}", "utf-8"),
+                )
+            )
+        ]
         if idx == num_txs - 1:
             # Adds searcher tip on last tx
-            ixs.append(transfer(TransferParams(
-                from_pubkey=payer_kp.pubkey(),
-                to_pubkey=tip_account,
-                lamports=lamports
-            )))
-        tx = Transaction.new_signed_with_payer(instructions=ixs,
-                                               payer=payer_kp.pubkey(),
-                                               signing_keypairs=[payer_kp],
-                                               recent_blockhash=blockhash
-                                               )
+            ixs.append(
+                transfer(TransferParams(from_pubkey=payer_kp.pubkey(), to_pubkey=tip_account, lamports=lamports))
+            )
+        tx = Transaction.new_signed_with_payer(
+            instructions=ixs, payer=payer_kp.pubkey(), signing_keypairs=[payer_kp], recent_blockhash=blockhash
+        )
         print(f"{idx=} signature={tx.signatures[0]}")
         txs.append(tx)
 
@@ -199,8 +195,11 @@ def send_bundle(
     print(f"bundle uuid: {uuid_response.uuid}")
 
     for tx in txs:
-        print(rpc_client.confirm_transaction(tx.signatures[0], Processed, sleep_seconds=0.5,
-                                             last_valid_block_height=block_height + 10))
+        print(
+            rpc_client.confirm_transaction(
+                tx.signatures[0], Processed, sleep_seconds=0.5, last_valid_block_height=block_height + 10
+            )
+        )
 
 
 if __name__ == "__main__":
