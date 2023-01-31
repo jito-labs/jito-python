@@ -1,0 +1,31 @@
+[tool.poetry]
+name = "jito_geyser"
+version = "0.1.0"
+description = "Jito Labs Geyser Client"
+authors = ["Jito Labs <support@jito.wtf>"]
+readme = "README.md"
+packages = [{ include = "jito_geyser" }]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+grpcio = "^1.51.1"
+protobuf = "^4.21.12"
+isort = "^5.11.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry-grpc-plugin]
+proto_path = "../geyser-grpc-plugin/proto/proto"
+python_out = "./jito_geyser/generated"
+
+[tool.black]
+line-length = 120
+target-version = ['py37']
+include = '\.pyi?$'
+extend-exclude = '''generated'''
+
+[tool.isort]
+profile = "black"
+extend_skip_glob = ["jito_geyser/generated/*"]
