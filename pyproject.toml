@@ -27,6 +27,7 @@ python_out = "./jito_searcher_client/generated"
 line-length = 120
 target-version = ['py37']
 include = '\.pyi?$'
+extend-exclude = '''generated'''
 
 [tool.isort]
 profile = "black"

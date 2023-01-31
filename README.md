@@ -43,8 +43,14 @@ $ curl -sSL https://install.python-poetry.org | python3 -
 Setup environment and build protobufs
 ```bash
 $ poetry install
-$ poetry protoc
 $ poetry shell
+$ poetry protoc
+```
+
+Linting
+```bash
+$ poetry run black .
+$ poetry run isort .
 ```
 
 Publishing package

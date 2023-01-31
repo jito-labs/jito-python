@@ -73,9 +73,7 @@ class SearcherInterceptor(
 
         return continuation(client_call_details, request)
 
-    def intercept_stream_unary(
-            self, continuation, client_call_details, request_iterator
-    ):
+    def intercept_stream_unary(self, continuation, client_call_details, request_iterator):
         self.authenticate_if_needed()
 
         client_call_details = self._insert_headers(
@@ -85,9 +83,7 @@ class SearcherInterceptor(
 
         return continuation(client_call_details, request_iterator)
 
-    def intercept_stream_stream(
-            self, continuation, client_call_details, request_iterator
-    ):
+    def intercept_stream_stream(self, continuation, client_call_details, request_iterator):
         self.authenticate_if_needed()
 
         client_call_details = self._insert_headers(
@@ -108,9 +104,7 @@ class SearcherInterceptor(
         return continuation(client_call_details, request)
 
     @staticmethod
-    def _insert_headers(
-            new_metadata: List[Tuple[str, str]], client_call_details
-    ) -> ClientCallDetails:
+    def _insert_headers(new_metadata: List[Tuple[str, str]], client_call_details) -> ClientCallDetails:
         metadata = []
         if client_call_details.metadata is not None:
             metadata = list(client_call_details.metadata)
@@ -144,9 +138,11 @@ class SearcherInterceptor(
         auth_client = AuthServiceStub(channel)
 
         new_access_token: RefreshAccessTokenResponse = auth_client.RefreshAccessToken(
-            RefreshAccessTokenRequest(refresh_token=self._refresh_token.token))
-        self._access_token = JwtToken(token=new_access_token.access_token.value,
-                                      expiration=new_access_token.access_token.expires_at_utc.seconds)
+            RefreshAccessTokenRequest(refresh_token=self._refresh_token.token)
+        )
+        self._access_token = JwtToken(
+            token=new_access_token.access_token.value, expiration=new_access_token.access_token.expires_at_utc.seconds
+        )
 
     def full_authentication(self):
         """
@@ -157,22 +153,18 @@ class SearcherInterceptor(
         auth_client = AuthServiceStub(channel)
 
         challenge = auth_client.GenerateAuthChallenge(
-            GenerateAuthChallengeRequest(
-                role=Role.SEARCHER, pubkey=bytes(self._kp.pubkey())
-            )
+            GenerateAuthChallengeRequest(role=Role.SEARCHER, pubkey=bytes(self._kp.pubkey()))
         ).challenge
 
         challenge_to_sign = f"{str(self._kp.pubkey())}-{challenge}"
 
         signed = self._kp.sign_message(bytes(challenge_to_sign, "utf8"))
 
-        auth_tokens_response: GenerateAuthTokensResponse = (
-            auth_client.GenerateAuthTokens(
-                GenerateAuthTokensRequest(
-                    challenge=challenge_to_sign,
-                    client_pubkey=bytes(self._kp.pubkey()),
-                    signed_challenge=bytes(signed),
-                )
+        auth_tokens_response: GenerateAuthTokensResponse = auth_client.GenerateAuthTokens(
+            GenerateAuthTokensRequest(
+                challenge=challenge_to_sign,
+                client_pubkey=bytes(self._kp.pubkey()),
+                signed_challenge=bytes(signed),
             )
         )
 
