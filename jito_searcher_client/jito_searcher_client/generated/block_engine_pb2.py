@@ -16,7 +16,7 @@ import shared_pb2 as shared__pb2
 import bundle_pb2 as bundle__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12\x62lock_engine.proto\x12\x0c\x62lock_engine\x1a\x0cpacket.proto\x1a\x0cshared.proto\x1a\x0c\x62undle.proto\"\x19\n\x17SubscribePacketsRequest\"^\n\x18SubscribePacketsResponse\x12\x1e\n\x06header\x18\x01 \x01(\x0b\x32\x0e.shared.Header\x12\"\n\x05\x62\x61tch\x18\x02 \x01(\x0b\x32\x13.packet.PacketBatch\"\x19\n\x17SubscribeBundlesRequest\"?\n\x18SubscribeBundlesResponse\x12#\n\x07\x62undles\x18\x01 \x03(\x0b\x32\x12.bundle.BundleUuid\"\x1c\n\x1a\x42lockBuilderFeeInfoRequest\"A\n\x1b\x42lockBuilderFeeInfoResponse\x12\x0e\n\x06pubkey\x18\x01 \x01(\t\x12\x12\n\ncommission\x18\x02 \x01(\x04\"&\n\x12\x41\x63\x63ountsOfInterest\x12\x10\n\x08\x61\x63\x63ounts\x18\x01 \x03(\t\"\x1b\n\x19\x41\x63\x63ountsOfInterestRequest\",\n\x18\x41\x63\x63ountsOfInterestUpdate\x12\x10\n\x08\x61\x63\x63ounts\x18\x01 \x03(\t\"l\n\x13\x45xpiringPacketBatch\x12\x1e\n\x06header\x18\x01 \x01(\x0b\x32\x0e.shared.Header\x12\"\n\x05\x62\x61tch\x18\x02 \x01(\x0b\x32\x13.packet.PacketBatch\x12\x11\n\texpiry_ms\x18\x03 \x01(\r\"x\n\x11PacketBatchUpdate\x12\x34\n\x07\x62\x61tches\x18\x01 \x01(\x0b\x32!.block_engine.ExpiringPacketBatchH\x00\x12&\n\theartbeat\x18\x02 \x01(\x0b\x32\x11.shared.HeartbeatH\x00\x42\x05\n\x03msg\"I\n!StartExpiringPacketStreamResponse\x12$\n\theartbeat\x18\x01 \x01(\x0b\x32\x11.shared.Heartbeat2\xd5\x02\n\x14\x42lockEngineValidator\x12\x65\n\x10SubscribePackets\x12%.block_engine.SubscribePacketsRequest\x1a&.block_engine.SubscribePacketsResponse\"\x00\x30\x01\x12\x65\n\x10SubscribeBundles\x12%.block_engine.SubscribeBundlesRequest\x1a&.block_engine.SubscribeBundlesResponse\"\x00\x30\x01\x12o\n\x16GetBlockBuilderFeeInfo\x12(.block_engine.BlockBuilderFeeInfoRequest\x1a).block_engine.BlockBuilderFeeInfoResponse\"\x00\x32\xfd\x01\n\x12\x42lockEngineRelayer\x12r\n\x1bSubscribeAccountsOfInterest\x12\'.block_engine.AccountsOfInterestRequest\x1a&.block_engine.AccountsOfInterestUpdate\"\x00\x30\x01\x12s\n\x19StartExpiringPacketStream\x12\x1f.block_engine.PacketBatchUpdate\x1a/.block_engine.StartExpiringPacketStreamResponse\"\x00(\x01\x30\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12\x62lock_engine.proto\x12\x0c\x62lock_engine\x1a\x0cpacket.proto\x1a\x0cshared.proto\x1a\x0c\x62undle.proto\"\x19\n\x17SubscribePacketsRequest\"^\n\x18SubscribePacketsResponse\x12\x1e\n\x06header\x18\x01 \x01(\x0b\x32\x0e.shared.Header\x12\"\n\x05\x62\x61tch\x18\x02 \x01(\x0b\x32\x13.packet.PacketBatch\"\x19\n\x17SubscribeBundlesRequest\"?\n\x18SubscribeBundlesResponse\x12#\n\x07\x62undles\x18\x01 \x03(\x0b\x32\x12.bundle.BundleUuid\"\x1c\n\x1a\x42lockBuilderFeeInfoRequest\"A\n\x1b\x42lockBuilderFeeInfoResponse\x12\x0e\n\x06pubkey\x18\x01 \x01(\t\x12\x12\n\ncommission\x18\x02 \x01(\x04\"&\n\x12\x41\x63\x63ountsOfInterest\x12\x10\n\x08\x61\x63\x63ounts\x18\x01 \x03(\t\"\x1b\n\x19\x41\x63\x63ountsOfInterestRequest\",\n\x18\x41\x63\x63ountsOfInterestUpdate\x12\x10\n\x08\x61\x63\x63ounts\x18\x01 \x03(\t\"\x1b\n\x19ProgramsOfInterestRequest\",\n\x18ProgramsOfInterestUpdate\x12\x10\n\x08programs\x18\x01 \x03(\t\"l\n\x13\x45xpiringPacketBatch\x12\x1e\n\x06header\x18\x01 \x01(\x0b\x32\x0e.shared.Header\x12\"\n\x05\x62\x61tch\x18\x02 \x01(\x0b\x32\x13.packet.PacketBatch\x12\x11\n\texpiry_ms\x18\x03 \x01(\r\"x\n\x11PacketBatchUpdate\x12\x34\n\x07\x62\x61tches\x18\x01 \x01(\x0b\x32!.block_engine.ExpiringPacketBatchH\x00\x12&\n\theartbeat\x18\x02 \x01(\x0b\x32\x11.shared.HeartbeatH\x00\x42\x05\n\x03msg\"I\n!StartExpiringPacketStreamResponse\x12$\n\theartbeat\x18\x01 \x01(\x0b\x32\x11.shared.Heartbeat2\xd5\x02\n\x14\x42lockEngineValidator\x12\x65\n\x10SubscribePackets\x12%.block_engine.SubscribePacketsRequest\x1a&.block_engine.SubscribePacketsResponse\"\x00\x30\x01\x12\x65\n\x10SubscribeBundles\x12%.block_engine.SubscribeBundlesRequest\x1a&.block_engine.SubscribeBundlesResponse\"\x00\x30\x01\x12o\n\x16GetBlockBuilderFeeInfo\x12(.block_engine.BlockBuilderFeeInfoRequest\x1a).block_engine.BlockBuilderFeeInfoResponse\"\x00\x32\xf1\x02\n\x12\x42lockEngineRelayer\x12r\n\x1bSubscribeAccountsOfInterest\x12\'.block_engine.AccountsOfInterestRequest\x1a&.block_engine.AccountsOfInterestUpdate\"\x00\x30\x01\x12r\n\x1bSubscribeProgramsOfInterest\x12\'.block_engine.ProgramsOfInterestRequest\x1a&.block_engine.ProgramsOfInterestUpdate\"\x00\x30\x01\x12s\n\x19StartExpiringPacketStream\x12\x1f.block_engine.PacketBatchUpdate\x1a/.block_engine.StartExpiringPacketStreamResponse\"\x00(\x01\x30\x01\x62\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'block_engine_pb2', globals())
@@ -41,14 +41,18 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _ACCOUNTSOFINTERESTREQUEST._serialized_end=457
   _ACCOUNTSOFINTERESTUPDATE._serialized_start=459
   _ACCOUNTSOFINTERESTUPDATE._serialized_end=503
-  _EXPIRINGPACKETBATCH._serialized_start=505
-  _EXPIRINGPACKETBATCH._serialized_end=613
-  _PACKETBATCHUPDATE._serialized_start=615
-  _PACKETBATCHUPDATE._serialized_end=735
-  _STARTEXPIRINGPACKETSTREAMRESPONSE._serialized_start=737
-  _STARTEXPIRINGPACKETSTREAMRESPONSE._serialized_end=810
-  _BLOCKENGINEVALIDATOR._serialized_start=813
-  _BLOCKENGINEVALIDATOR._serialized_end=1154
-  _BLOCKENGINERELAYER._serialized_start=1157
-  _BLOCKENGINERELAYER._serialized_end=1410
+  _PROGRAMSOFINTERESTREQUEST._serialized_start=505
+  _PROGRAMSOFINTERESTREQUEST._serialized_end=532
+  _PROGRAMSOFINTERESTUPDATE._serialized_start=534
+  _PROGRAMSOFINTERESTUPDATE._serialized_end=578
+  _EXPIRINGPACKETBATCH._serialized_start=580
+  _EXPIRINGPACKETBATCH._serialized_end=688
+  _PACKETBATCHUPDATE._serialized_start=690
+  _PACKETBATCHUPDATE._serialized_end=810
+  _STARTEXPIRINGPACKETSTREAMRESPONSE._serialized_start=812
+  _STARTEXPIRINGPACKETSTREAMRESPONSE._serialized_end=885
+  _BLOCKENGINEVALIDATOR._serialized_start=888
+  _BLOCKENGINEVALIDATOR._serialized_end=1229
+  _BLOCKENGINERELAYER._serialized_start=1232
+  _BLOCKENGINERELAYER._serialized_end=1601
 # @@protoc_insertion_point(module_scope)

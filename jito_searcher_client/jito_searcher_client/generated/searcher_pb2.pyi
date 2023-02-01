@@ -69,6 +69,60 @@ class SendBundleResponse(google.protobuf.message.Message):
 global___SendBundleResponse = SendBundleResponse
 
 @typing_extensions.final
+class ProgramSubscriptionV0(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    PROGRAMS_FIELD_NUMBER: builtins.int
+    @property
+    def programs(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]: ...
+    def __init__(
+        self,
+        *,
+        programs: collections.abc.Iterable[builtins.str] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["programs", b"programs"]) -> None: ...
+
+global___ProgramSubscriptionV0 = ProgramSubscriptionV0
+
+@typing_extensions.final
+class WriteLockedAccountSubscriptionV0(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    ACCOUNTS_FIELD_NUMBER: builtins.int
+    @property
+    def accounts(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]: ...
+    def __init__(
+        self,
+        *,
+        accounts: collections.abc.Iterable[builtins.str] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["accounts", b"accounts"]) -> None: ...
+
+global___WriteLockedAccountSubscriptionV0 = WriteLockedAccountSubscriptionV0
+
+@typing_extensions.final
+class MempoolSubscription(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    PROGRAM_V0_SUB_FIELD_NUMBER: builtins.int
+    WLA_V0_SUB_FIELD_NUMBER: builtins.int
+    @property
+    def program_v0_sub(self) -> global___ProgramSubscriptionV0: ...
+    @property
+    def wla_v0_sub(self) -> global___WriteLockedAccountSubscriptionV0: ...
+    def __init__(
+        self,
+        *,
+        program_v0_sub: global___ProgramSubscriptionV0 | None = ...,
+        wla_v0_sub: global___WriteLockedAccountSubscriptionV0 | None = ...,
+    ) -> None: ...
+    def HasField(self, field_name: typing_extensions.Literal["msg", b"msg", "program_v0_sub", b"program_v0_sub", "wla_v0_sub", b"wla_v0_sub"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing_extensions.Literal["msg", b"msg", "program_v0_sub", b"program_v0_sub", "wla_v0_sub", b"wla_v0_sub"]) -> None: ...
+    def WhichOneof(self, oneof_group: typing_extensions.Literal["msg", b"msg"]) -> typing_extensions.Literal["program_v0_sub", "wla_v0_sub"] | None: ...
+
+global___MempoolSubscription = MempoolSubscription
+
+@typing_extensions.final
 class PendingTxSubscriptionRequest(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor
 

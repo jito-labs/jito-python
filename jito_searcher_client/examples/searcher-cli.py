@@ -18,6 +18,9 @@ from jito_searcher_client.generated.searcher_pb2 import (
     NextScheduledLeaderResponse,
     PendingTxSubscriptionRequest,
     SendBundleRequest,
+    MempoolSubscription,
+    WriteLockedAccountSubscriptionV0,
+    ProgramSubscriptionV0,
 )
 from jito_searcher_client.generated.searcher_pb2_grpc import SearcherServiceStub
 from jito_searcher_client.searcher import get_searcher_client
@@ -53,14 +56,35 @@ def cli(
 @click.argument("accounts", required=True, nargs=-1)
 def mempool_accounts(client: SearcherServiceStub, accounts: List[str]):
     """
-    Stream pending transactions from write-locked accounts.
+    Stream transactions from the mempool if they write-lock one of the provided accounts
     """
     leader: NextScheduledLeaderResponse = client.GetNextScheduledLeader(NextScheduledLeaderRequest())
     print(
         f"next scheduled leader is {leader.next_leader_identity} in {leader.next_leader_slot - leader.current_slot} slots"
     )
 
-    for notification in client.SubscribePendingTransactions(PendingTxSubscriptionRequest(accounts=accounts)):
+    for notification in client.SubscribeMempool(
+        MempoolSubscription(wla_v0_sub=WriteLockedAccountSubscriptionV0(accounts=accounts))
+    ):
+        for packet in notification.transactions:
+            print(VersionedTransaction.from_bytes(packet.data))
+
+
+@click.command("mempool-programs")
+@click.pass_obj
+@click.argument("programs", required=True, nargs=-1)
+def mempool_programs(client: SearcherServiceStub, programs: List[str]):
+    """
+    Stream transactions from the mempool if they mention one of the provided programs
+    """
+    leader: NextScheduledLeaderResponse = client.GetNextScheduledLeader(NextScheduledLeaderRequest())
+    print(
+        f"next scheduled leader is {leader.next_leader_identity} in {leader.next_leader_slot - leader.current_slot} slots"
+    )
+
+    for notification in client.SubscribeMempool(
+        MempoolSubscription(program_v0_sub=ProgramSubscriptionV0(programs=programs))
+    ):
         for packet in notification.transactions:
             print(VersionedTransaction.from_bytes(packet.data))
 
@@ -204,6 +228,7 @@ def send_bundle(
 
 if __name__ == "__main__":
     cli.add_command(mempool_accounts)
+    cli.add_command(mempool_programs)
     cli.add_command(next_scheduled_leader)
     cli.add_command(connected_leaders)
     cli.add_command(tip_accounts)

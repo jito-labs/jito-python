@@ -25,6 +25,11 @@ class SearcherServiceStub(object):
                 request_serializer=searcher__pb2.PendingTxSubscriptionRequest.SerializeToString,
                 response_deserializer=searcher__pb2.PendingTxNotification.FromString,
                 )
+        self.SubscribeMempool = channel.unary_stream(
+                '/searcher.SearcherService/SubscribeMempool',
+                request_serializer=searcher__pb2.MempoolSubscription.SerializeToString,
+                response_deserializer=searcher__pb2.PendingTxNotification.FromString,
+                )
         self.SendBundle = channel.unary_unary(
                 '/searcher.SearcherService/SendBundle',
                 request_serializer=searcher__pb2.SendBundleRequest.SerializeToString,
@@ -61,6 +66,14 @@ class SearcherServiceServicer(object):
     def SubscribePendingTransactions(self, request, context):
         """RPC endpoint to subscribe to pending transactions. Clients can provide a list of base58 encoded accounts.
         Any transactions that write-lock the provided accounts will be streamed to the searcher.
+        NOTE: DEPRECATED SOON!!!
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def SubscribeMempool(self, request, context):
+        """RPC endpoint to subscribe to mempool based on a few filters
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -104,6 +117,11 @@ def add_SearcherServiceServicer_to_server(servicer, server):
             'SubscribePendingTransactions': grpc.unary_stream_rpc_method_handler(
                     servicer.SubscribePendingTransactions,
                     request_deserializer=searcher__pb2.PendingTxSubscriptionRequest.FromString,
+                    response_serializer=searcher__pb2.PendingTxNotification.SerializeToString,
+            ),
+            'SubscribeMempool': grpc.unary_stream_rpc_method_handler(
+                    servicer.SubscribeMempool,
+                    request_deserializer=searcher__pb2.MempoolSubscription.FromString,
                     response_serializer=searcher__pb2.PendingTxNotification.SerializeToString,
             ),
             'SendBundle': grpc.unary_unary_rpc_method_handler(
@@ -166,6 +184,23 @@ class SearcherService(object):
             metadata=None):
         return grpc.experimental.unary_stream(request, target, '/searcher.SearcherService/SubscribePendingTransactions',
             searcher__pb2.PendingTxSubscriptionRequest.SerializeToString,
+            searcher__pb2.PendingTxNotification.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def SubscribeMempool(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(request, target, '/searcher.SearcherService/SubscribeMempool',
+            searcher__pb2.MempoolSubscription.SerializeToString,
             searcher__pb2.PendingTxNotification.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

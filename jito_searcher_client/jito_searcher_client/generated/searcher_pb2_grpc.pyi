@@ -23,7 +23,13 @@ class SearcherServiceStub:
     ]
     """RPC endpoint to subscribe to pending transactions. Clients can provide a list of base58 encoded accounts.
     Any transactions that write-lock the provided accounts will be streamed to the searcher.
+    NOTE: DEPRECATED SOON!!!
     """
+    SubscribeMempool: grpc.UnaryStreamMultiCallable[
+        searcher_pb2.MempoolSubscription,
+        searcher_pb2.PendingTxNotification,
+    ]
+    """RPC endpoint to subscribe to mempool based on a few filters"""
     SendBundle: grpc.UnaryUnaryMultiCallable[
         searcher_pb2.SendBundleRequest,
         searcher_pb2.SendBundleResponse,
@@ -62,7 +68,15 @@ class SearcherServiceServicer(metaclass=abc.ABCMeta):
     ) -> collections.abc.Iterator[searcher_pb2.PendingTxNotification]:
         """RPC endpoint to subscribe to pending transactions. Clients can provide a list of base58 encoded accounts.
         Any transactions that write-lock the provided accounts will be streamed to the searcher.
+        NOTE: DEPRECATED SOON!!!
         """
+    @abc.abstractmethod
+    def SubscribeMempool(
+        self,
+        request: searcher_pb2.MempoolSubscription,
+        context: grpc.ServicerContext,
+    ) -> collections.abc.Iterator[searcher_pb2.PendingTxNotification]:
+        """RPC endpoint to subscribe to mempool based on a few filters"""
     @abc.abstractmethod
     def SendBundle(
         self,
