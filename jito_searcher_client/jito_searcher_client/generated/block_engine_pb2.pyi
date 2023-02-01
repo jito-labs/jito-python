@@ -149,6 +149,32 @@ class AccountsOfInterestUpdate(google.protobuf.message.Message):
 global___AccountsOfInterestUpdate = AccountsOfInterestUpdate
 
 @typing_extensions.final
+class ProgramsOfInterestRequest(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    def __init__(
+        self,
+    ) -> None: ...
+
+global___ProgramsOfInterestRequest = ProgramsOfInterestRequest
+
+@typing_extensions.final
+class ProgramsOfInterestUpdate(google.protobuf.message.Message):
+    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+    PROGRAMS_FIELD_NUMBER: builtins.int
+    @property
+    def programs(self) -> google.protobuf.internal.containers.RepeatedScalarFieldContainer[builtins.str]: ...
+    def __init__(
+        self,
+        *,
+        programs: collections.abc.Iterable[builtins.str] | None = ...,
+    ) -> None: ...
+    def ClearField(self, field_name: typing_extensions.Literal["programs", b"programs"]) -> None: ...
+
+global___ProgramsOfInterestUpdate = ProgramsOfInterestUpdate
+
+@typing_extensions.final
 class ExpiringPacketBatch(google.protobuf.message.Message):
     """A series of packets with an expiration attached to them.
     The header contains a timestamp for when this packet was generated.

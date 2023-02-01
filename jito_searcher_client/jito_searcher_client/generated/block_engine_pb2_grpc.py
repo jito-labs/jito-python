@@ -155,6 +155,11 @@ class BlockEngineRelayerStub(object):
                 request_serializer=block__engine__pb2.AccountsOfInterestRequest.SerializeToString,
                 response_deserializer=block__engine__pb2.AccountsOfInterestUpdate.FromString,
                 )
+        self.SubscribeProgramsOfInterest = channel.unary_stream(
+                '/block_engine.BlockEngineRelayer/SubscribeProgramsOfInterest',
+                request_serializer=block__engine__pb2.ProgramsOfInterestRequest.SerializeToString,
+                response_deserializer=block__engine__pb2.ProgramsOfInterestUpdate.FromString,
+                )
         self.StartExpiringPacketStream = channel.stream_stream(
                 '/block_engine.BlockEngineRelayer/StartExpiringPacketStream',
                 request_serializer=block__engine__pb2.PacketBatchUpdate.SerializeToString,
@@ -172,6 +177,12 @@ class BlockEngineRelayerServicer(object):
         / For all transactions the relayer receives, it forwards transactions to the block engine which write-lock
         / any of the accounts in the AOI.
         """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def SubscribeProgramsOfInterest(self, request, context):
+        """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
@@ -194,6 +205,11 @@ def add_BlockEngineRelayerServicer_to_server(servicer, server):
                     servicer.SubscribeAccountsOfInterest,
                     request_deserializer=block__engine__pb2.AccountsOfInterestRequest.FromString,
                     response_serializer=block__engine__pb2.AccountsOfInterestUpdate.SerializeToString,
+            ),
+            'SubscribeProgramsOfInterest': grpc.unary_stream_rpc_method_handler(
+                    servicer.SubscribeProgramsOfInterest,
+                    request_deserializer=block__engine__pb2.ProgramsOfInterestRequest.FromString,
+                    response_serializer=block__engine__pb2.ProgramsOfInterestUpdate.SerializeToString,
             ),
             'StartExpiringPacketStream': grpc.stream_stream_rpc_method_handler(
                     servicer.StartExpiringPacketStream,
@@ -226,6 +242,23 @@ class BlockEngineRelayer(object):
         return grpc.experimental.unary_stream(request, target, '/block_engine.BlockEngineRelayer/SubscribeAccountsOfInterest',
             block__engine__pb2.AccountsOfInterestRequest.SerializeToString,
             block__engine__pb2.AccountsOfInterestUpdate.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def SubscribeProgramsOfInterest(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_stream(request, target, '/block_engine.BlockEngineRelayer/SubscribeProgramsOfInterest',
+            block__engine__pb2.ProgramsOfInterestRequest.SerializeToString,
+            block__engine__pb2.ProgramsOfInterestUpdate.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 

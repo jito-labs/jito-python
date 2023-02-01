@@ -72,6 +72,10 @@ class BlockEngineRelayerStub:
     / For all transactions the relayer receives, it forwards transactions to the block engine which write-lock
     / any of the accounts in the AOI.
     """
+    SubscribeProgramsOfInterest: grpc.UnaryStreamMultiCallable[
+        block_engine_pb2.ProgramsOfInterestRequest,
+        block_engine_pb2.ProgramsOfInterestUpdate,
+    ]
     StartExpiringPacketStream: grpc.StreamStreamMultiCallable[
         block_engine_pb2.PacketBatchUpdate,
         block_engine_pb2.StartExpiringPacketStreamResponse,
@@ -98,6 +102,12 @@ class BlockEngineRelayerServicer(metaclass=abc.ABCMeta):
         / For all transactions the relayer receives, it forwards transactions to the block engine which write-lock
         / any of the accounts in the AOI.
         """
+    @abc.abstractmethod
+    def SubscribeProgramsOfInterest(
+        self,
+        request: block_engine_pb2.ProgramsOfInterestRequest,
+        context: grpc.ServicerContext,
+    ) -> collections.abc.Iterator[block_engine_pb2.ProgramsOfInterestUpdate]: ...
     @abc.abstractmethod
     def StartExpiringPacketStream(
         self,

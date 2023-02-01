@@ -16,7 +16,7 @@ import packet_pb2 as packet__pb2
 from google.protobuf import timestamp_pb2 as google_dot_protobuf_dot_timestamp__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0esearcher.proto\x12\x08searcher\x1a\x0c\x62undle.proto\x1a\x0cpacket.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x19\n\x08SlotList\x12\r\n\x05slots\x18\x01 \x03(\x04\"3\n\x11SendBundleRequest\x12\x1e\n\x06\x62undle\x18\x01 \x01(\x0b\x32\x0e.bundle.Bundle\"\"\n\x12SendBundleResponse\x12\x0c\n\x04uuid\x18\x01 \x01(\t\"0\n\x1cPendingTxSubscriptionRequest\x12\x10\n\x08\x61\x63\x63ounts\x18\x01 \x03(\t\"\xa6\x01\n\x15PendingTxNotification\x12\x32\n\x0eserver_side_ts\x18\x01 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x33\n\x0f\x65xpiration_time\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12$\n\x0ctransactions\x18\x03 \x03(\x0b\x32\x0e.packet.Packet\"\x1c\n\x1aNextScheduledLeaderRequest\"k\n\x1bNextScheduledLeaderResponse\x12\x14\n\x0c\x63urrent_slot\x18\x01 \x01(\x04\x12\x18\n\x10next_leader_slot\x18\x02 \x01(\x04\x12\x1c\n\x14next_leader_identity\x18\x03 \x01(\t\"\x19\n\x17\x43onnectedLeadersRequest\"\xc5\x01\n\x18\x43onnectedLeadersResponse\x12Y\n\x14\x63onnected_validators\x18\x01 \x03(\x0b\x32;.searcher.ConnectedLeadersResponse.ConnectedValidatorsEntry\x1aN\n\x18\x43onnectedValidatorsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12!\n\x05value\x18\x02 \x01(\x0b\x32\x12.searcher.SlotList:\x02\x38\x01\"\x17\n\x15GetTipAccountsRequest\"*\n\x16GetTipAccountsResponse\x12\x10\n\x08\x61\x63\x63ounts\x18\x01 \x03(\t\"\x1f\n\x1dSubscribeBundleResultsRequest2\xc6\x04\n\x0fSearcherService\x12[\n\x16SubscribeBundleResults\x12\'.searcher.SubscribeBundleResultsRequest\x1a\x14.bundle.BundleResult\"\x00\x30\x01\x12k\n\x1cSubscribePendingTransactions\x12&.searcher.PendingTxSubscriptionRequest\x1a\x1f.searcher.PendingTxNotification\"\x00\x30\x01\x12I\n\nSendBundle\x12\x1b.searcher.SendBundleRequest\x1a\x1c.searcher.SendBundleResponse\"\x00\x12g\n\x16GetNextScheduledLeader\x12$.searcher.NextScheduledLeaderRequest\x1a%.searcher.NextScheduledLeaderResponse\"\x00\x12^\n\x13GetConnectedLeaders\x12!.searcher.ConnectedLeadersRequest\x1a\".searcher.ConnectedLeadersResponse\"\x00\x12U\n\x0eGetTipAccounts\x12\x1f.searcher.GetTipAccountsRequest\x1a .searcher.GetTipAccountsResponse\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0esearcher.proto\x12\x08searcher\x1a\x0c\x62undle.proto\x1a\x0cpacket.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x19\n\x08SlotList\x12\r\n\x05slots\x18\x01 \x03(\x04\"3\n\x11SendBundleRequest\x12\x1e\n\x06\x62undle\x18\x01 \x01(\x0b\x32\x0e.bundle.Bundle\"\"\n\x12SendBundleResponse\x12\x0c\n\x04uuid\x18\x01 \x01(\t\")\n\x15ProgramSubscriptionV0\x12\x10\n\x08programs\x18\x01 \x03(\t\"4\n WriteLockedAccountSubscriptionV0\x12\x10\n\x08\x61\x63\x63ounts\x18\x01 \x03(\t\"\x99\x01\n\x13MempoolSubscription\x12\x39\n\x0eprogram_v0_sub\x18\x01 \x01(\x0b\x32\x1f.searcher.ProgramSubscriptionV0H\x00\x12@\n\nwla_v0_sub\x18\x02 \x01(\x0b\x32*.searcher.WriteLockedAccountSubscriptionV0H\x00\x42\x05\n\x03msg\"0\n\x1cPendingTxSubscriptionRequest\x12\x10\n\x08\x61\x63\x63ounts\x18\x01 \x03(\t\"\xa6\x01\n\x15PendingTxNotification\x12\x32\n\x0eserver_side_ts\x18\x01 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x33\n\x0f\x65xpiration_time\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12$\n\x0ctransactions\x18\x03 \x03(\x0b\x32\x0e.packet.Packet\"\x1c\n\x1aNextScheduledLeaderRequest\"k\n\x1bNextScheduledLeaderResponse\x12\x14\n\x0c\x63urrent_slot\x18\x01 \x01(\x04\x12\x18\n\x10next_leader_slot\x18\x02 \x01(\x04\x12\x1c\n\x14next_leader_identity\x18\x03 \x01(\t\"\x19\n\x17\x43onnectedLeadersRequest\"\xc5\x01\n\x18\x43onnectedLeadersResponse\x12Y\n\x14\x63onnected_validators\x18\x01 \x03(\x0b\x32;.searcher.ConnectedLeadersResponse.ConnectedValidatorsEntry\x1aN\n\x18\x43onnectedValidatorsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12!\n\x05value\x18\x02 \x01(\x0b\x32\x12.searcher.SlotList:\x02\x38\x01\"\x17\n\x15GetTipAccountsRequest\"*\n\x16GetTipAccountsResponse\x12\x10\n\x08\x61\x63\x63ounts\x18\x01 \x03(\t\"\x1f\n\x1dSubscribeBundleResultsRequest2\x9e\x05\n\x0fSearcherService\x12[\n\x16SubscribeBundleResults\x12\'.searcher.SubscribeBundleResultsRequest\x1a\x14.bundle.BundleResult\"\x00\x30\x01\x12k\n\x1cSubscribePendingTransactions\x12&.searcher.PendingTxSubscriptionRequest\x1a\x1f.searcher.PendingTxNotification\"\x00\x30\x01\x12V\n\x10SubscribeMempool\x12\x1d.searcher.MempoolSubscription\x1a\x1f.searcher.PendingTxNotification\"\x00\x30\x01\x12I\n\nSendBundle\x12\x1b.searcher.SendBundleRequest\x1a\x1c.searcher.SendBundleResponse\"\x00\x12g\n\x16GetNextScheduledLeader\x12$.searcher.NextScheduledLeaderRequest\x1a%.searcher.NextScheduledLeaderResponse\"\x00\x12^\n\x13GetConnectedLeaders\x12!.searcher.ConnectedLeadersRequest\x1a\".searcher.ConnectedLeadersResponse\"\x00\x12U\n\x0eGetTipAccounts\x12\x1f.searcher.GetTipAccountsRequest\x1a .searcher.GetTipAccountsResponse\"\x00\x62\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'searcher_pb2', globals())
@@ -31,26 +31,32 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _SENDBUNDLEREQUEST._serialized_end=167
   _SENDBUNDLERESPONSE._serialized_start=169
   _SENDBUNDLERESPONSE._serialized_end=203
-  _PENDINGTXSUBSCRIPTIONREQUEST._serialized_start=205
-  _PENDINGTXSUBSCRIPTIONREQUEST._serialized_end=253
-  _PENDINGTXNOTIFICATION._serialized_start=256
-  _PENDINGTXNOTIFICATION._serialized_end=422
-  _NEXTSCHEDULEDLEADERREQUEST._serialized_start=424
-  _NEXTSCHEDULEDLEADERREQUEST._serialized_end=452
-  _NEXTSCHEDULEDLEADERRESPONSE._serialized_start=454
-  _NEXTSCHEDULEDLEADERRESPONSE._serialized_end=561
-  _CONNECTEDLEADERSREQUEST._serialized_start=563
-  _CONNECTEDLEADERSREQUEST._serialized_end=588
-  _CONNECTEDLEADERSRESPONSE._serialized_start=591
-  _CONNECTEDLEADERSRESPONSE._serialized_end=788
-  _CONNECTEDLEADERSRESPONSE_CONNECTEDVALIDATORSENTRY._serialized_start=710
-  _CONNECTEDLEADERSRESPONSE_CONNECTEDVALIDATORSENTRY._serialized_end=788
-  _GETTIPACCOUNTSREQUEST._serialized_start=790
-  _GETTIPACCOUNTSREQUEST._serialized_end=813
-  _GETTIPACCOUNTSRESPONSE._serialized_start=815
-  _GETTIPACCOUNTSRESPONSE._serialized_end=857
-  _SUBSCRIBEBUNDLERESULTSREQUEST._serialized_start=859
-  _SUBSCRIBEBUNDLERESULTSREQUEST._serialized_end=890
-  _SEARCHERSERVICE._serialized_start=893
-  _SEARCHERSERVICE._serialized_end=1475
+  _PROGRAMSUBSCRIPTIONV0._serialized_start=205
+  _PROGRAMSUBSCRIPTIONV0._serialized_end=246
+  _WRITELOCKEDACCOUNTSUBSCRIPTIONV0._serialized_start=248
+  _WRITELOCKEDACCOUNTSUBSCRIPTIONV0._serialized_end=300
+  _MEMPOOLSUBSCRIPTION._serialized_start=303
+  _MEMPOOLSUBSCRIPTION._serialized_end=456
+  _PENDINGTXSUBSCRIPTIONREQUEST._serialized_start=458
+  _PENDINGTXSUBSCRIPTIONREQUEST._serialized_end=506
+  _PENDINGTXNOTIFICATION._serialized_start=509
+  _PENDINGTXNOTIFICATION._serialized_end=675
+  _NEXTSCHEDULEDLEADERREQUEST._serialized_start=677
+  _NEXTSCHEDULEDLEADERREQUEST._serialized_end=705
+  _NEXTSCHEDULEDLEADERRESPONSE._serialized_start=707
+  _NEXTSCHEDULEDLEADERRESPONSE._serialized_end=814
+  _CONNECTEDLEADERSREQUEST._serialized_start=816
+  _CONNECTEDLEADERSREQUEST._serialized_end=841
+  _CONNECTEDLEADERSRESPONSE._serialized_start=844
+  _CONNECTEDLEADERSRESPONSE._serialized_end=1041
+  _CONNECTEDLEADERSRESPONSE_CONNECTEDVALIDATORSENTRY._serialized_start=963
+  _CONNECTEDLEADERSRESPONSE_CONNECTEDVALIDATORSENTRY._serialized_end=1041
+  _GETTIPACCOUNTSREQUEST._serialized_start=1043
+  _GETTIPACCOUNTSREQUEST._serialized_end=1066
+  _GETTIPACCOUNTSRESPONSE._serialized_start=1068
+  _GETTIPACCOUNTSRESPONSE._serialized_end=1110
+  _SUBSCRIBEBUNDLERESULTSREQUEST._serialized_start=1112
+  _SUBSCRIBEBUNDLERESULTSREQUEST._serialized_end=1143
+  _SEARCHERSERVICE._serialized_start=1146
+  _SEARCHERSERVICE._serialized_end=1816
 # @@protoc_insertion_point(module_scope)
