@@ -14,13 +14,12 @@ from jito_searcher_client.convert import tx_to_protobuf_packet
 from jito_searcher_client.generated.bundle_pb2 import Bundle
 from jito_searcher_client.generated.searcher_pb2 import (
     ConnectedLeadersRequest,
+    MempoolSubscription,
     NextScheduledLeaderRequest,
     NextScheduledLeaderResponse,
-    PendingTxSubscriptionRequest,
-    SendBundleRequest,
-    MempoolSubscription,
-    WriteLockedAccountSubscriptionV0,
     ProgramSubscriptionV0,
+    SendBundleRequest,
+    WriteLockedAccountSubscriptionV0,
 )
 from jito_searcher_client.generated.searcher_pb2_grpc import SearcherServiceStub
 from jito_searcher_client.searcher import get_searcher_client

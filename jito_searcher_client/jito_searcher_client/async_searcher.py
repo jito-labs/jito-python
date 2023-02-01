@@ -1,14 +1,13 @@
 import time
 from typing import List, Optional, Tuple
 
-from grpc import (
+from grpc import ssl_channel_credentials
+from grpc.aio import (
+    ClientCallDetails,
     UnaryStreamClientInterceptor,
     UnaryUnaryClientInterceptor,
-    intercept_channel,
     secure_channel,
-    ssl_channel_credentials,
 )
-from grpc.aio import ClientCallDetails
 from solders.keypair import Keypair
 
 from jito_searcher_client.generated.auth_pb2 import (
@@ -24,12 +23,12 @@ from jito_searcher_client.generated.searcher_pb2_grpc import SearcherServiceStub
 from jito_searcher_client.token import JwtToken
 
 
-class SearcherInterceptor(
+class AsyncSearcherInterceptor(
     UnaryUnaryClientInterceptor,
     UnaryStreamClientInterceptor,
 ):
     """
-    SearcherInterceptor is responsible for authenticating with the block engine.
+    AsyncSearcherInterceptor is responsible for authenticating with the block engine.
     Authentication happens in a challenge-response handshake.
     1. Request a challenge and provide your public key.
     2. Get challenge and sign a message "{pubkey}-{challenge}".
@@ -51,25 +50,39 @@ class SearcherInterceptor(
         self._access_token: Optional[JwtToken] = None
         self._refresh_token: Optional[JwtToken] = None
 
-    def intercept_unary_stream(self, continuation, client_call_details, request):
-        self.authenticate_if_needed()
+    async def intercept_unary_stream(
+        self,
+        continuation,
+        client_call_details,
+        request,
+    ):
+        await self.authenticate_if_needed()
 
         client_call_details = self._insert_headers(
             [("authorization", f"Bearer {self._access_token.token}")],
             client_call_details,
         )
 
-        return continuation(client_call_details, request)
+        call = await continuation(client_call_details, request)
 
-    def intercept_unary_unary(self, continuation, client_call_details, request):
-        self.authenticate_if_needed()
+        return call
+
+    async def intercept_unary_unary(
+        self,
+        continuation,
+        client_call_details,
+        request,
+    ):
+        await self.authenticate_if_needed()
 
         client_call_details = self._insert_headers(
             [("authorization", f"Bearer {self._access_token.token}")],
             client_call_details,
         )
 
-        return continuation(client_call_details, request)
+        undone_call = await continuation(client_call_details, request)
+        response = await undone_call
+        return response
 
     @staticmethod
     def _insert_headers(new_metadata: List[Tuple[str, str]], client_call_details) -> ClientCallDetails:
@@ -86,17 +99,17 @@ class SearcherInterceptor(
             False,
         )
 
-    def authenticate_if_needed(self):
+    async def authenticate_if_needed(self):
         """
         Maybe authenticates depending on state of access + refresh tokens
         """
         now = int(time.time())
         if self._access_token is None or self._refresh_token is None or now >= self._refresh_token.expiration:
-            self.full_authentication()
+            await self.full_authentication()
         elif now >= self._access_token.expiration:
-            self.refresh_authentication()
+            await self.refresh_authentication()
 
-    def refresh_authentication(self):
+    async def refresh_authentication(self):
         """
         Performs an authentication refresh with the block engine, which involves using the refresh token to get a new
         access token.
@@ -105,14 +118,14 @@ class SearcherInterceptor(
         channel = secure_channel(self._url, credentials)
         auth_client = AuthServiceStub(channel)
 
-        new_access_token: RefreshAccessTokenResponse = auth_client.RefreshAccessToken(
+        new_access_token: RefreshAccessTokenResponse = await auth_client.RefreshAccessToken(
             RefreshAccessTokenRequest(refresh_token=self._refresh_token.token)
         )
         self._access_token = JwtToken(
             token=new_access_token.access_token.value, expiration=new_access_token.access_token.expires_at_utc.seconds
         )
 
-    def full_authentication(self):
+    async def full_authentication(self):
         """
         Performs full authentication with the block engine
         """
@@ -120,15 +133,17 @@ class SearcherInterceptor(
         channel = secure_channel(self._url, credentials)
         auth_client = AuthServiceStub(channel)
 
-        challenge = auth_client.GenerateAuthChallenge(
-            GenerateAuthChallengeRequest(role=Role.SEARCHER, pubkey=bytes(self._kp.pubkey()))
+        challenge = (
+            await auth_client.GenerateAuthChallenge(
+                GenerateAuthChallengeRequest(role=Role.SEARCHER, pubkey=bytes(self._kp.pubkey()))
+            )
         ).challenge
 
         challenge_to_sign = f"{str(self._kp.pubkey())}-{challenge}"
 
         signed = self._kp.sign_message(bytes(challenge_to_sign, "utf8"))
 
-        auth_tokens_response: GenerateAuthTokensResponse = auth_client.GenerateAuthTokens(
+        auth_tokens_response: GenerateAuthTokensResponse = await auth_client.GenerateAuthTokens(
             GenerateAuthTokensRequest(
                 challenge=challenge_to_sign,
                 client_pubkey=bytes(self._kp.pubkey()),
@@ -147,7 +162,7 @@ class SearcherInterceptor(
         )
 
 
-def get_searcher_client(url: str, kp: Keypair) -> SearcherServiceStub:
+async def get_async_searcher_client(url: str, kp: Keypair) -> SearcherServiceStub:
     """
     Returns a Searcher Service client that intercepts requests and authenticates with the block engine.
     :param url: url of the block engine without http/https
@@ -155,11 +170,11 @@ def get_searcher_client(url: str, kp: Keypair) -> SearcherServiceStub:
     :return: SearcherServiceStub which handles authentication on requests
     """
     # Authenticate immediately
-    searcher_interceptor = SearcherInterceptor(url, kp)
-    searcher_interceptor.authenticate_if_needed()
+    searcher_interceptor = AsyncSearcherInterceptor(url, kp)
+    await searcher_interceptor.authenticate_if_needed()
 
     credentials = ssl_channel_credentials()
-    channel = secure_channel(url, credentials)
-    intercepted_channel = intercept_channel(channel, searcher_interceptor)
+    channel = secure_channel(url, credentials, interceptors=[searcher_interceptor])
+    channel._unary_stream_interceptors.append(searcher_interceptor)
 
-    return SearcherServiceStub(intercepted_channel)
+    return SearcherServiceStub(channel)
