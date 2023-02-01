@@ -19,6 +19,8 @@ from jito_searcher_client.generated.auth_pb2 import (
     RefreshAccessTokenResponse,
     Role,
 )
+from jito_searcher_client.generated.auth_pb2_grpc import AuthServiceStub
+from jito_searcher_client.generated.searcher_pb2_grpc import SearcherServiceStub
 from jito_searcher_client.token import JwtToken
 
 

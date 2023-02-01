@@ -17,7 +17,6 @@ from jito_searcher_client.generated.searcher_pb2 import (
     MempoolSubscription,
     NextScheduledLeaderRequest,
     NextScheduledLeaderResponse,
-    PendingTxSubscriptionRequest,
     ProgramSubscriptionV0,
     SendBundleRequest,
     WriteLockedAccountSubscriptionV0,
