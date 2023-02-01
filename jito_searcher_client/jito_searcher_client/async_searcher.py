@@ -10,7 +10,6 @@ from grpc.aio import (
 )
 from solders.keypair import Keypair
 
-from jito_searcher_client.token import JwtToken
 from jito_searcher_client.generated.auth_pb2 import (
     GenerateAuthChallengeRequest,
     GenerateAuthTokensRequest,
@@ -21,6 +20,7 @@ from jito_searcher_client.generated.auth_pb2 import (
 )
 from jito_searcher_client.generated.auth_pb2_grpc import AuthServiceStub
 from jito_searcher_client.generated.searcher_pb2_grpc import SearcherServiceStub
+from jito_searcher_client.token import JwtToken
 
 
 class AsyncSearcherInterceptor(

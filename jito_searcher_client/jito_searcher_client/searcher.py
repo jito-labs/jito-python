@@ -19,7 +19,7 @@ from jito_searcher_client.generated.auth_pb2 import (
     RefreshAccessTokenResponse,
     Role,
 )
-from token import JwtToken
+from jito_searcher_client.token import JwtToken
 
 
 class SearcherInterceptor(
