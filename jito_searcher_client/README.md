@@ -7,7 +7,8 @@ $ pip install jito_searcher_client
 ```
 
 # Keypair Authentication
-Please request access to the block engine by creating a solana keypair and emailing the public key to support@jito.wtf.
+Basic access(5 req/second per IP per region) no longer requires approval. Please visit our [Discord](https://discord.gg/jito) dev channel, if you have other questions.
+If your application requires higher rate limits, please complete this [form](https://forms.gle/8jZmKX1KZA71jXp38)
 
 # Examples
 
