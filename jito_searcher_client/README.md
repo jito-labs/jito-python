@@ -7,7 +7,7 @@ $ pip install jito_searcher_client
 ```
 
 # Keypair Authentication
-Basic access(5 req/second per IP per region) no longer requires approval. Please visit our [Discord](https://discord.gg/jito) dev channel, if you have other questions.
+Basic access(5 req/second per region) no longer requires approval. Please visit our [Discord](https://discord.gg/jito) dev channel, if you have other questions.
 If your application requires higher rate limits, please complete this [form](https://forms.gle/8jZmKX1KZA71jXp38)
 
 # Examples
