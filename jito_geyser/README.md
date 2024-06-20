@@ -7,7 +7,7 @@ $ pip install jito_geyser
 ```
 
 # Access Token
-Please request access to geyser by emailing support@jito.wtf
+We no longer support access to geyser. Please use 3rd party providers.
 
 # Examples
 

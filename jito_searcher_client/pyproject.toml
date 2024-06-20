@@ -2,7 +2,7 @@
 name = "jito_searcher_client"
 version = "0.1.4"
 description = "Jito Labs Python Searcher Client"
-authors = ["Jito Labs <support@jito.wtf>"]
+authors = ["Jito Labs <https://discord.gg/jito>"]
 readme = "README.md"
 packages = [{ include = "jito_searcher_client" }]
 
