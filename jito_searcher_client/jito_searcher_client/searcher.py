@@ -52,22 +52,24 @@ class SearcherInterceptor(
         self._refresh_token: Optional[JwtToken] = None
 
     def intercept_unary_stream(self, continuation, client_call_details, request):
-        self.authenticate_if_needed()
+        if self._kp != None:
+            self.authenticate_if_needed()
 
-        client_call_details = self._insert_headers(
-            [("authorization", f"Bearer {self._access_token.token}")],
-            client_call_details,
-        )
+            client_call_details = self._insert_headers(
+                [("authorization", f"Bearer {self._access_token.token}")],
+                client_call_details,
+            )
 
         return continuation(client_call_details, request)
 
     def intercept_unary_unary(self, continuation, client_call_details, request):
-        self.authenticate_if_needed()
+        if self._kp != None:
+            self.authenticate_if_needed()
 
-        client_call_details = self._insert_headers(
-            [("authorization", f"Bearer {self._access_token.token}")],
-            client_call_details,
-        )
+            client_call_details = self._insert_headers(
+                [("authorization", f"Bearer {self._access_token.token}")],
+                client_call_details,
+            )
 
         return continuation(client_call_details, request)
 
@@ -147,16 +149,17 @@ class SearcherInterceptor(
         )
 
 
-def get_searcher_client(url: str, kp: Keypair) -> SearcherServiceStub:
+def get_searcher_client(url: str, kp: Keypair=None) -> SearcherServiceStub:
     """
     Returns a Searcher Service client that intercepts requests and authenticates with the block engine.
     :param url: url of the block engine without http/https
     :param kp: keypair of the block engine
     :return: SearcherServiceStub which handles authentication on requests
     """
-    # Authenticate immediately
+    # Authenticate immediately only if it is required
     searcher_interceptor = SearcherInterceptor(url, kp)
-    searcher_interceptor.authenticate_if_needed()
+    if kp != None:
+        searcher_interceptor.authenticate_if_needed()
 
     credentials = ssl_channel_credentials()
     channel = secure_channel(url, credentials)

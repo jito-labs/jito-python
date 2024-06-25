@@ -31,6 +31,21 @@ leaders = client.GetConnectedLeaders(ConnectedLeadersRequest())
 print(f"{leaders=}")
 ```
 
+## Sync Client (No Auth)
+
+```python
+from jito_searcher_client import get_searcher_client
+from jito_searcher_client.generated.searcher_pb2 import ConnectedLeadersRequest
+
+from solders.keypair import Keypair
+
+BLOCK_ENGINE_URL = "frankfurt.mainnet.block-engine.jito.wtf"
+
+client = get_searcher_client(BLOCK_ENGINE_URL)
+leaders = client.GetConnectedLeaders(ConnectedLeadersRequest())
+print(f"{leaders=}")
+```
+
 ## Async Client
 
 ```python
@@ -48,6 +63,26 @@ async def main():
     with open(KEYPAIR_PATH) as kp_path:
         kp = Keypair.from_json(kp_path.read())
     client = await get_async_searcher_client(BLOCK_ENGINE_URL, kp)
+    leaders = await client.GetConnectedLeaders(ConnectedLeadersRequest())
+    print(f"{leaders=}")
+
+asyncio.run(main())
+```
+
+## Async Client (No Auth)
+
+```python
+import asyncio
+
+from jito_searcher_client import get_async_searcher_client
+from jito_searcher_client.generated.searcher_pb2 import ConnectedLeadersRequest
+
+from solders.keypair import Keypair
+
+BLOCK_ENGINE_URL = "frankfurt.mainnet.block-engine.jito.wtf"
+
+async def main():
+    client = await get_async_searcher_client(BLOCK_ENGINE_URL)
     leaders = await client.GetConnectedLeaders(ConnectedLeadersRequest())
     print(f"{leaders=}")
 
