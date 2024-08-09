@@ -176,6 +176,8 @@ def send_bundle(
     balance = rpc_client.get_balance(payer_kp.pubkey()).value
     print(f"payer public key: {payer_kp.pubkey()} {balance=}")
 
+    # This check is not needed since jito-sol is on the majority of validators
+    # It is useful if jito-sol is on less than 50% of the validators
     is_leader_slot = False
     print("waiting for jito leader...")
     while not is_leader_slot:
