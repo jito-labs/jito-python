@@ -56,7 +56,8 @@ class AsyncSearcherInterceptor(
         client_call_details,
         request,
     ):
-        await self.authenticate_if_needed()
+        if self._kp != None:
+            await self.authenticate_if_needed()
 
         client_call_details = self._insert_headers(
             [("authorization", f"Bearer {self._access_token.token}")],
@@ -73,7 +74,8 @@ class AsyncSearcherInterceptor(
         client_call_details,
         request,
     ):
-        await self.authenticate_if_needed()
+        if self._kp != None:
+            await self.authenticate_if_needed()
 
         client_call_details = self._insert_headers(
             [("authorization", f"Bearer {self._access_token.token}")],
@@ -162,7 +164,7 @@ class AsyncSearcherInterceptor(
         )
 
 
-async def get_async_searcher_client(url: str, kp: Keypair) -> SearcherServiceStub:
+async def get_async_searcher_client(url: str, kp: Keypair=None) -> SearcherServiceStub:
     """
     Returns a Searcher Service client that intercepts requests and authenticates with the block engine.
     :param url: url of the block engine without http/https
