@@ -1,4 +1,6 @@
 # About
+[![PyPI](https://img.shields.io/pypi/v/jito_searcher_client?label=PyPI&logo=python)](https://pypi.org/project/jito_searcher_client/)
+
 This library contains tooling to interact with Jito Lab's Block Engine as a searcher.
 
 # Downloading
