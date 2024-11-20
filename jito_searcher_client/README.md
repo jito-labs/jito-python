@@ -27,6 +27,8 @@ with open(KEYPAIR_PATH) as kp_path:
     kp = Keypair.from_json(kp_path.read())
 
 client = get_searcher_client(BLOCK_ENGINE_URL, kp)
+# This call is not needed since jito-sol is on the majority of validators
+# It is useful if jito-sol is on less than 50% of the validators
 leaders = client.GetConnectedLeaders(ConnectedLeadersRequest())
 print(f"{leaders=}")
 ```
@@ -48,6 +50,8 @@ async def main():
     with open(KEYPAIR_PATH) as kp_path:
         kp = Keypair.from_json(kp_path.read())
     client = await get_async_searcher_client(BLOCK_ENGINE_URL, kp)
+    # This call is not needed since jito-sol is on the majority of validators
+    # It is useful if jito-sol is on less than 50% of the validators
     leaders = await client.GetConnectedLeaders(ConnectedLeadersRequest())
     print(f"{leaders=}")
 
