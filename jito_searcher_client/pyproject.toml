@@ -31,3 +31,15 @@ extend-exclude = '''generated'''
 [tool.isort]
 profile = "black"
 extend_skip_glob = ["jito_searcher_client/generated/*"]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[project]
+name = "jito_searcher_client"
+version = "0.1.6"
+description = "Jito Labs Python Searcher Client"
+authors = [
+    {name = "Jito Labs", email = "noreply@jito.wtf"},
+]
