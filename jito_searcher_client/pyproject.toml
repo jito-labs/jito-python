@@ -32,10 +32,6 @@ extend-exclude = '''generated'''
 profile = "black"
 extend_skip_glob = ["jito_searcher_client/generated/*"]
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
-
 [project]
 name = "jito_searcher_client"
 version = "0.1.6"
