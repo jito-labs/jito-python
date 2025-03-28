@@ -23,7 +23,7 @@ from jito_searcher_client.generated.searcher_pb2 import ConnectedLeadersRequest
 from solders.keypair import Keypair
 
 KEYPAIR_PATH = "/path/to/authenticated/keypair.json"
-BLOCK_ENGINE_URL = "frankfurt.mainnet.block-engine.jito.wtf"
+BLOCK_ENGINE_URL = "mainnet.block-engine.jito.wtf"
 
 with open(KEYPAIR_PATH) as kp_path:
     kp = Keypair.from_json(kp_path.read())
@@ -41,7 +41,7 @@ from jito_searcher_client.generated.searcher_pb2 import ConnectedLeadersRequest
 
 from solders.keypair import Keypair
 
-BLOCK_ENGINE_URL = "frankfurt.mainnet.block-engine.jito.wtf"
+BLOCK_ENGINE_URL = "mainnet.block-engine.jito.wtf"
 
 client = get_searcher_client(BLOCK_ENGINE_URL)
 leaders = client.GetConnectedLeaders(ConnectedLeadersRequest())
@@ -59,7 +59,7 @@ from jito_searcher_client.generated.searcher_pb2 import ConnectedLeadersRequest
 from solders.keypair import Keypair
 
 KEYPAIR_PATH = "/path/to/authenticated/keypair.json"
-BLOCK_ENGINE_URL = "frankfurt.mainnet.block-engine.jito.wtf"
+BLOCK_ENGINE_URL = "mainnet.block-engine.jito.wtf"
 
 async def main():
     with open(KEYPAIR_PATH) as kp_path:
@@ -81,7 +81,7 @@ from jito_searcher_client.generated.searcher_pb2 import ConnectedLeadersRequest
 
 from solders.keypair import Keypair
 
-BLOCK_ENGINE_URL = "frankfurt.mainnet.block-engine.jito.wtf"
+BLOCK_ENGINE_URL = "mainnet.block-engine.jito.wtf"
 
 async def main():
     client = await get_async_searcher_client(BLOCK_ENGINE_URL)
