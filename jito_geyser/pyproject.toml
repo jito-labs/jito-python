@@ -13,8 +13,8 @@ protobuf = "^4.21.12"
 isort = "^5.11.4"
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [tool.poetry-grpc-plugin]
 proto_path = "../geyser-grpc-plugin/proto/proto"
