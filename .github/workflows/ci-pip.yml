@@ -42,7 +42,7 @@ jobs:
         poetry build
     
     - name: Publish package
-      uses: pypa/gh-action-pypi-publish@v1
+      uses: pypa/gh-action-pypi-publish@v1.12.4
       with:
         password: ${{ secrets.PYPITOKEN }}
         packages-dir: jito_searcher_client/dist/
